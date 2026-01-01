@@ -1,39 +1,36 @@
-import React from 'react';
-import HeroSection from '@/components/home/HeroSection';
-import AboutSection from '@/components/home/AboutSection';
-import BenefitsSection from '@/components/home/BenefitsSection';
-import CTASection from '@/components/home/CTASection';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
-import ImageSlider from '@/components/home/ImageSlider';
-import LeadershipSection from '@/components/home/LeadershipSection';
-import SponsorsSection from '@/components/home/SponsorsSection';
+import { Section } from "@/types/cms";
+import HeroSection from "@/components/home/HeroSection";
+import AboutSection from "@/components/home/AboutSection";
+import BenefitsSection from "@/components/home/BenefitsSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import CTASection from "@/components/home/CTASection";
+import LeadershipSection from "@/components/home/LeadershipSection";
+import SponsorsSection from "@/components/home/SponsorsSection";
+import ResourcesSection from "@/components/home/ResourcesSection";
 
-type SectionRendererProps = {
-    type: string;
-    content: any;
-};
+interface SectionRendererProps {
+    section: Section;
+}
 
-export default function SectionRenderer({ type, content }: SectionRendererProps) {
-    switch (type) {
+export default function SectionRenderer({ section }: SectionRendererProps) {
+    switch (section.type) {
         case 'hero':
-            return <HeroSection content={content} />;
+            return <HeroSection content={section.content as any} />;
         case 'about':
-            return <AboutSection content={content} />;
+            return <AboutSection content={section.content as any} />;
         case 'benefits':
-            return <BenefitsSection content={content} />;
-        case 'cta':
-            // CTASection expects content prop, though type might be loose or missing import in the component file
-            return <CTASection content={content} />;
+            return <BenefitsSection content={section.content as any} />;
         case 'testimonials':
-            return <TestimonialsSection />; // Check if it accepts content, assuming default handling for now
-        case 'slider':
-            return <ImageSlider />; // Check props
+            return <TestimonialsSection content={section.content as any} />;
+        case 'cta':
+            return <CTASection content={section.content as any} />;
         case 'leadership':
-            return <LeadershipSection />;
+            return <LeadershipSection content={section.content as any} />;
         case 'sponsors':
-            return <SponsorsSection />;
+            return <SponsorsSection content={section.content as any} />;
+        case 'resources':
+            return <ResourcesSection content={section.content as any} />;
         default:
-            console.warn(`Unknown section type: ${type}`);
             return null;
     }
 }

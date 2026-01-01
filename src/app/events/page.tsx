@@ -1,7 +1,18 @@
 import { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { fetchContent, type EventsPageContent } from '@/lib/cms/fetchContent';
+interface EventItem {
+    title: string;
+    date: string;
+    location: string;
+    description: string;
+    featured?: boolean;
+}
+
+interface EventsPageContent {
+    upcoming: EventItem[];
+    past: EventItem[];
+}
 
 export const metadata: Metadata = {
     title: 'Events - SOOOP',
@@ -47,9 +58,8 @@ const defaultContent: EventsPageContent = {
     ]
 };
 
-export default async function EventsPage() {
-    const fetchedContent = await fetchContent<EventsPageContent>('page_events');
-    const content = fetchedContent || defaultContent;
+export default function EventsPage() {
+    const content = defaultContent;
 
     return (
         <>

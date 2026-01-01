@@ -5,7 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Linkedin, Award, Users } from 'lucide-react';
 
-import { fetchContent, type CabinetPageContent } from '@/lib/cms/fetchContent';
+interface CabinetMember {
+    name: string;
+    role: string;
+    image: string;
+    qualification?: string;
+    bio?: string;
+    email?: string;
+    position?: string;
+}
+
+interface CabinetPageContent {
+    patrons: CabinetMember[];
+    executive: CabinetMember[];
+    committee: CabinetMember[];
+}
 
 export const metadata: Metadata = {
     title: 'Executive Cabinet | SOOOP',
@@ -48,17 +62,16 @@ const defaultContent: CabinetPageContent = {
         }
     ],
     committee: [
-        { name: 'Dr. Ayesha Saleem', position: 'President' },
-        { name: 'Dr. Agha Saad Khan', position: 'General Secretary' },
-        { name: 'Dr. Muhammad Arslan Ashraf', position: 'Finance Secretary' },
-        { name: 'Dr. Faiza Akhtar', position: 'Executive Member' },
-        { name: 'Dr. Rubina Shah', position: 'Executive Member' }
+        { name: 'Dr. Ayesha Saleem', position: 'President', role: 'President', image: '' },
+        { name: 'Dr. Agha Saad Khan', position: 'General Secretary', role: 'General Secretary', image: '' },
+        { name: 'Dr. Muhammad Arslan Ashraf', position: 'Finance Secretary', role: 'Finance Secretary', image: '' },
+        { name: 'Dr. Faiza Akhtar', position: 'Executive Member', role: 'Executive Member', image: '' },
+        { name: 'Dr. Rubina Shah', position: 'Executive Member', role: 'Executive Member', image: '' }
     ]
 };
 
-export default async function CabinetMembersPage() {
-    const fetchedContent = await fetchContent<CabinetPageContent>('page_cabinet');
-    const content = fetchedContent || defaultContent;
+export default function CabinetMembersPage() {
+    const content = defaultContent;
 
     return (
         <>

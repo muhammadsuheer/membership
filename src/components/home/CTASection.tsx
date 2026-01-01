@@ -4,12 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
-type CTAContent = {
-    heading?: string;
-    subheading?: string;
-    button_text?: string;
-    button_link?: string;
-};
+import { CTAContent } from "@/types/cms";
 
 type CTASectionProps = {
     content?: CTAContent | null;

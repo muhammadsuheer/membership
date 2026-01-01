@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Linkedin } from "lucide-react";
 
+import { LeadershipContent, LeadershipItem } from "@/types/cms";
 
 type LeadershipSectionProps = {
     content?: LeadershipContent | null;
@@ -52,7 +53,7 @@ export default function LeadershipSection({ content }: LeadershipSectionProps) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                    {leaders.map((leader: any, index: number) => (
+                    {leaders.map((leader: LeadershipItem, index: number) => (
                         <div
                             key={index}
                             className="group relative bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-soft-xl transition-all duration-300 border border-gray-100 max-w-sm mx-auto sm:max-w-none w-full"

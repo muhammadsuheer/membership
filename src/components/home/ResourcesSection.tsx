@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Download, FileText, ArrowRight, BookOpen } from "lucide-react";
+import { FileText, Download, ArrowRight, BookOpen } from "lucide-react";
+import { ResourcesContent } from "@/types/cms";
 
 
 type ResourcesSectionProps = {

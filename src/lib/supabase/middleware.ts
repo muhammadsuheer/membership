@@ -35,7 +35,11 @@ export async function updateSession(request: NextRequest) {
 
     // PROTECTED ROUTES:
     // /membership should be public (landing page). /signup (application) requires auth.
-    const protectedPrefixes = ['/dashboard', '/admin', '/signup']
+    // Dashboard removed as per request. Only checking signup now (or nothing if signup is public?)
+    // Assuming /signup is the only protected route now, or maybe none strictly "protected" in the same way?
+    // Let's keep /signup protected if it was before, or if user wants to remove all dash related stuff.
+    // If dashboard is gone, user likely doesn't have a specific landing page after login.
+    const protectedPrefixes: string[] = [] // Minimal protection if needed
     const isProtected = protectedPrefixes.some(prefix => path.startsWith(prefix))
 
     if (isProtected && !user) {
@@ -45,10 +49,10 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    // AUTH ROUTES (Redirect to dashboard if already logged in):
+    // AUTH ROUTES (Redirect to home if already logged in):
     if (user && path.startsWith('/login')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/dashboard'
+        url.pathname = '/'
         return NextResponse.redirect(url)
     }
 

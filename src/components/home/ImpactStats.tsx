@@ -2,13 +2,7 @@
 
 import { Users, Calendar, Award, Globe, type LucideIcon } from "lucide-react";
 
-type StatItem = {
-    id: string;
-    label: string;
-    value: string;
-    icon: string;
-    description: string;
-};
+import { StatItem } from "@/types/cms";
 
 const IconMap: Record<string, LucideIcon> = {
     Users,

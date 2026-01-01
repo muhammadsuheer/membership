@@ -2,8 +2,34 @@ import { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
-import { fetchContent, type MembershipPageContent } from '@/lib/cms/fetchContent';
 import { Users, Ticket, BookOpen, Coins, Contact, Check } from 'lucide-react';
+
+interface MembershipBenefit {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    link: string;
+}
+
+interface MembershipType {
+    type: string;
+    fee: string;
+    description: string;
+    features: string[];
+    popular: boolean;
+}
+
+interface DownloadItem {
+    name: string;
+    url: string;
+}
+
+interface MembershipPageContent {
+    benefits: MembershipBenefit[];
+    types: MembershipType[];
+    downloads: DownloadItem[];
+}
 
 export const metadata: Metadata = {
     title: 'Membership - SOOOP',
@@ -87,9 +113,8 @@ const defaultContent: MembershipPageContent = {
 // Map hardcoded icons for default list if dynamic icons aren't supported yet
 const Icons = [BookOpen, Users, Ticket, BookOpen, Coins, Contact];
 
-export default async function MembershipPage() {
-    const fetchedContent = await fetchContent<MembershipPageContent>('page_membership');
-    const content = fetchedContent || defaultContent;
+export default function MembershipPage() {
+    const content = defaultContent;
 
     return (
         <>

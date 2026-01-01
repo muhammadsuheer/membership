@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2 } from "lucide-react";
+import { SponsorsContent, SponsorItem } from "@/types/cms";
 
 
 type SponsorsSectionProps = {
@@ -27,7 +28,7 @@ export default function SponsorsSection({ content }: SponsorsSectionProps) {
                 </p>
 
                 <div className="flex flex-wrap justify-center items-center gap-6 md:gap-16 opacity-70 md:opacity-60 hover:opacity-100 transition-opacity duration-300">
-                    {partners.map((partner, index) => (
+                    {partners.map((partner: SponsorItem, index: number) => (
                         <div
                             key={index}
                             className="group flex flex-col items-center justify-center space-y-2 cursor-default w-[calc(33%-1rem)] md:w-auto"

@@ -1,7 +1,17 @@
 import { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { fetchContent, type ContactPageContent } from '@/lib/cms/fetchContent';
+interface ContactPageContent {
+    hero: {
+        title: string;
+        subtitle: string;
+    };
+    info: {
+        address: string;
+        phone: string;
+        email: string;
+    };
+}
 
 export const metadata: Metadata = {
     title: 'Contact Us - SOOOP',
@@ -28,9 +38,8 @@ function renderBold(text: string) {
     );
 }
 
-export default async function ContactPage() {
-    const fetchedContent = await fetchContent<ContactPageContent>('page_contact');
-    const content = fetchedContent || defaultContent;
+export default function ContactPage() {
+    const content = defaultContent;
 
     // Helper to process address newlines
     const addressLines = content.info.address.split('\n');

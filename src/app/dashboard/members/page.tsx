@@ -1,37 +1,38 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import MemberManagement from "@/components/dashboard/MemberManagement";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ProfileForm from "@/components/profile/ProfileForm";
 
-export default async function ProfilePage() {
+export default async function MembersPage() {
     const supabase = await createClient();
+
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
         redirect("/login");
     }
 
+    // Role check - strict, only admin can see this page
     const { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
-    // Determine Role for Layout
-    const role = profile?.role || user.user_metadata?.role || 'member';
+    // Fallback: If no profile or no full_name, use metadata or default
+    const displayName = profile?.full_name || user.user_metadata?.full_name || 'Admin User';
+
+    if (profile?.role !== 'admin') {
+        redirect("/dashboard");
+    }
 
     return (
         <DashboardLayout
-            userRole={role}
-            userName={profile?.full_name}
+            userRole="admin"
+            userName={displayName}
             userEmail={user.email}
         >
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-                <p className="text-gray-500 mt-2">Manage your account information and preferences.</p>
-            </div>
-
-            <ProfileForm user={user} profile={profile} />
+            <MemberManagement />
         </DashboardLayout>
     );
 }

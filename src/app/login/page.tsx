@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { createClient } from '@/lib/supabase/client';
@@ -10,27 +11,28 @@ import { Loader2, Mail, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [isSent, setIsSent] = useState(false);
+    const [isSent, setIsSent] = useState(false); // Can be removed later if unused
     const supabase = createClient();
+    const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         try {
-            const { error } = await supabase.auth.signInWithOtp({
+            const { error } = await supabase.auth.signInWithPassword({
                 email,
-                options: {
-                    emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
-                }
+                password,
             });
 
             if (error) {
                 toast.error(error.message);
             } else {
-                setIsSent(true);
-                toast.success('Magic link sent!');
+                toast.success('Signed in successfully!');
+                router.refresh(); // Refresh to update session in middleware/components
+                router.push('/dashboard');
             }
         } catch (error) {
             console.error(error);
@@ -67,7 +69,7 @@ export default function LoginPage() {
                         <>
                             <div className="text-center mb-8">
                                 <h1 className="text-3xl font-bold text-primary-900 mb-2">Welcome Back</h1>
-                                <p className="text-gray-600">Sign in via Magic Link (No Password)</p>
+                                <p className="text-gray-600">Sign in to your account</p>
                             </div>
 
                             <div className="card shadow-xl border-t-4 border-t-primary">
@@ -87,6 +89,29 @@ export default function LoginPage() {
                                         </div>
                                     </div>
 
+                                    <div>
+                                        <div className="flex justify-between items-center mb-1">
+                                            <label className="label mb-0">Password</label>
+                                            <Link href="/forgot-password" className="text-sm text-primary hover:underline font-medium">
+                                                Forgot password?
+                                            </Link>
+                                        </div>
+                                        <div className="relative">
+                                            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400">
+                                                {/* Lock icon placeholder, or import it if strict */}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                                            </div>
+                                            <input
+                                                type="password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                className="input pl-10"
+                                                placeholder="••••••••"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
                                     <button
                                         type="submit"
                                         disabled={isLoading}
@@ -94,7 +119,7 @@ export default function LoginPage() {
                                     >
                                         {isLoading ? (
                                             <>
-                                                <Loader2 className="w-5 h-5 mr-2 animate-spin" /> Sending Link...
+                                                <Loader2 className="w-5 h-5 mr-2 animate-spin" /> Signing In...
                                             </>
                                         ) : (
                                             <>
@@ -108,7 +133,7 @@ export default function LoginPage() {
                                     <p className="text-gray-600">
                                         Don't have an account?{' '}
                                         <Link href="/signup" className="text-primary font-bold hover:underline">
-                                            Apply for Membership
+                                            Become a Member
                                         </Link>
                                     </p>
                                 </div>

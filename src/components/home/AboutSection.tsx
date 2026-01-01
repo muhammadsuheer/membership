@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
-import { type AboutContent } from "@/lib/cms/fetchContent";
+import { AboutContent } from "@/types/cms";
 
 export default function AboutSection({ content }: { content?: AboutContent }) {
     // Adapter for backward compatibility or default values

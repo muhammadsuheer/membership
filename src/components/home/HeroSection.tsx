@@ -2,15 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle2, Users } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
-import { type HeroContent } from "@/lib/cms/fetchContent";
-
-type StatItem = {
-    id: string;
-    label: string;
-    value: string;
-    icon: string;
-    description: string;
-};
+import { HeroContent, StatItem } from "@/types/cms";
 
 type HeroSectionProps = {
     content?: HeroContent | null;

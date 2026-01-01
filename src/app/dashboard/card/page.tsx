@@ -1,16 +1,16 @@
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
-import MembershipCard from '@/components/cabinet/MembershipCard';
-import Link from 'next/link';
-import { AlertCircle } from 'lucide-react';
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import IdentityCard from "@/components/dashboard/IdentityCard";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
-export default async function MemberCardPage() {
+export default async function IDCardPage() {
     const supabase = await createClient();
-
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        redirect('/login');
+        redirect("/login");
     }
 
     const { data: profile } = await supabase
@@ -19,78 +19,31 @@ export default async function MemberCardPage() {
         .eq('id', user.id)
         .single();
 
-    if (!profile) {
-        return <div>Error loading profile</div>;
+    // Auth Check
+    if (profile?.membership_status !== 'approved') {
+        redirect("/dashboard"); // Only approved members can see this
     }
-
-    const isActive = profile.membership_status === 'active';
-    // Check expiry. If null, handle gracefully (maybe not active yet).
-    const isExpired = profile.membership_expiry ? new Date(profile.membership_expiry) < new Date() : false;
-
-    if (!isActive || isExpired) {
-        return (
-            <>
-                <main className="min-h-screen bg-gray-50 flex items-center justify-center py-20">
-                    <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-red-500">
-                        <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <AlertCircle className="w-8 h-8" />
-                        </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">Membership Issue</h1>
-
-                        {isExpired ? (
-                            <p className="text-gray-600 mb-6">
-                                Your membership expired on <span className="font-semibold">{new Date(profile.membership_expiry).toLocaleDateString()}</span>.
-                                <br />Please renew your membership to access your card.
-                            </p>
-                        ) : (
-                            <p className="text-gray-600 mb-6">
-                                Your membership is currently <strong>{profile.membership_status || 'Pending'}</strong>.
-                                <br />You will be able to download your card once an administrator approves your application.
-                            </p>
-                        )}
-
-                        <Link href="/contact" className="btn btn-primary w-full">
-                            Contact Administration
-                        </Link>
-                    </div>
-                </main>
-            </>
-        );
-    }
-
-    const memberData = {
-        name: profile.full_name,
-        specialty: profile.specialty || 'Optometrist', // Fallback or strict?
-        registration_no: profile.registration_number || 'Pending',
-        cnic: profile.cnic,
-        expiry: profile.membership_expiry,
-        photo_url: profile.profile_photo_url,
-        phone: profile.contact_number,
-        address: profile.residential_address || 'Lahore, Pakistan',
-    };
 
     return (
-        <div className="py-8">
-            <div className="container px-4 mx-auto">
-                <div className="max-w-4xl mx-auto">
-                    <div className="mb-8">
-                        <h1 className="text-2xl font-bold text-gray-900">My Membership Card</h1>
-                        <p className="text-gray-500 text-sm">Download and print your official SOOOP membership card.</p>
-                    </div>
-
-                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex justify-center mb-6">
-                        <MembershipCard member={memberData} />
-                    </div>
-
-                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 text-sm text-blue-800 flex gap-3">
-                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                        <p>
-                            <strong>Note:</strong> This card is computer generated and valid only until the expiry date shown.
-                            Please keep a digital copy for your records. If you notice any errors, please contact the secretariat immediately.
-                        </p>
-                    </div>
+        <DashboardLayout
+            userRole="member"
+            userName={profile?.full_name}
+            userEmail={user.email}
+        >
+            <div className="flex flex-col items-center py-10 fade-in-up">
+                <div className="w-full max-w-4xl flex justify-start mb-8">
+                    <Link href="/dashboard" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition font-medium">
+                        <ChevronLeft className="w-4 h-4" /> Back to Dashboard
+                    </Link>
                 </div>
+
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">My Digital Identity</h1>
+                <p className="text-gray-500 mb-12 text-center max-w-md">
+                    Official SOOOP Membership Card. Valid for entry to all events and workshops.
+                </p>
+
+                <IdentityCard profile={profile} />
             </div>
-        </div>
+        </DashboardLayout>
     );
 }

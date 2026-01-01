@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AboutSection from '@/components/home/AboutSection';
-import { fetchContent, type AboutContent } from '@/lib/cms/fetchContent';
+import { AboutContent } from '@/types/cms';
 
 export const metadata: Metadata = {
     title: 'About Us - SOOOP',
@@ -23,9 +23,8 @@ const defaultContent: AboutContent = {
     years_text: "Years of Dedicated Service"
 };
 
-export default async function AboutPage() {
-    const fetchedContent = await fetchContent<AboutContent>('page_about');
-    const content = fetchedContent || defaultContent;
+export default function AboutPage() {
+    const content = defaultContent;
 
     return (
         <>

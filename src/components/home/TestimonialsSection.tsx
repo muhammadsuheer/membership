@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Star, Quote } from "lucide-react";
+import { TestimonialsContent, TestimonialItem } from "@/types/cms";
 
 
 type TestimonialsSectionProps = {
@@ -59,7 +60,7 @@ export default function TestimonialsSection({ content }: TestimonialsSectionProp
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8">
-                    {testimonials.map((testimonial) => (
+                    {testimonials.map((testimonial: TestimonialItem) => (
                         <div
                             key={testimonial.id}
                             className="bg-white p-8 rounded-2xl shadow-soft hover:shadow-soft-xl transition-all duration-300 relative group border border-gray-100"
@@ -82,15 +83,15 @@ export default function TestimonialsSection({ content }: TestimonialsSectionProp
                             <div className="flex items-center gap-4 border-t border-gray-100 pt-6">
                                 <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md">
                                     <Image
-                                        src={(testimonial as any).image || '/images/avatar_placeholder.png'}
-                                        alt={(testimonial as any).name || (testimonial as any).author}
+                                        src={testimonial.image || '/images/avatar_placeholder.png'}
+                                        alt={testimonial.name}
                                         fill
                                         className="object-cover"
                                     />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-primary-900 text-lg leading-tight">
-                                        {(testimonial as any).name || (testimonial as any).author}
+                                        {testimonial.name}
                                     </h4>
                                     <p className="text-sm text-gray-500">{testimonial.role}</p>
                                 </div>
